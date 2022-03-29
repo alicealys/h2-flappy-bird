@@ -1,6 +1,6 @@
 # h2-flappy-bird
 
-Based on [Black Ops III Flappy Bird by JariK](https://steamcommunity.com/sharedfiles/filedetails/?id=1720319747)
+Based on [Black Ops III Flappy Bird](https://steamcommunity.com/sharedfiles/filedetails/?id=1720319747) by [JariK](https://github.com/JariKCoding) 
 
 # How
 * Install [h2-mod](https://github.com/fedddddd/h2-mod#download)
@@ -22,3 +22,8 @@ Based on [Black Ops III Flappy Bird by JariK](https://steamcommunity.com/sharedf
 | <img src="assets/github/game.png?raw=true" /> |
 |:-:|
 | In game |
+
+# Credits
+* Based on [Black Ops III Flappy Bird](https://steamcommunity.com/sharedfiles/filedetails/?id=1720319747) by [JariK](https://github.com/JariKCoding)
+* Image assets from [samuelcust/flappy-bird-assets](https://github.com/samuelcust/flappy-bird-assets)
+* Flappy Bird font from https://www.dafont.com/04b-19.font?text=Flappy+Bird
