@@ -1,9 +1,3 @@
-setmetatable(_G, {
-	__index = function(t, k)
-		return rawget(_G, k) or luiglobals[k]
-	end
-})
-
 CoD.FlappyBirdContainer = InheritFrom(LUI.UIElement)
 
 game:addlocalizedstring("MENU_FLAPPY_BIRD", "Flappy Bird")
@@ -31,7 +25,7 @@ end
 
 local birdcolor = "yellow"
 
-function CoD.FlappyBirdContainer.new(HudRef, InstanceRef)
+function CoD.FlappyBirdContainer.new()
 	local root = LUI.UIElement.new({
 		topAnchor = true,
 		leftAnchor = true,
@@ -127,7 +121,6 @@ function CoD.FlappyBirdContainer.new(HudRef, InstanceRef)
 	local frametime = 15
 	local updatescale = (frametime / 30)
 	local updatescaleinv = 1 / updatescale
-	local ticks = 1000 / frametime
 	local pipewidth = 70
 	local pipegap = 200
 	local pipes = {}
@@ -149,7 +142,6 @@ function CoD.FlappyBirdContainer.new(HudRef, InstanceRef)
 	local birdy = -25
 	local birdsize = 50
 
-	-- Why the fuck did i add support for highscores until 65536
 	local function gethighscore()
 		local text = io.readfile("flappybird_hs")
 		return text == "" and 0 or tonumber(text)
@@ -162,29 +154,34 @@ function CoD.FlappyBirdContainer.new(HudRef, InstanceRef)
 	highscorelabel:setText("HIGHSCORE: " .. gethighscore())
 
 	local function newpipe(height)
-		local top = LUI.UIImage.new()
-		top:setLeftRight(false, true, 300, 0)
-		top:setTopBottom(false, false, -360, height)
+		local top = LUI.UIImage.new({
+			rightAnchor = true,
+			bottom = height,
+			top = height - 640,
+		})
 		top:setZRotInC(180)
 		top:setImage(RegisterMaterial("flappybird/pipe-green"))
 		root:addElement(top)
 
-		local bottom = LUI.UIImage.new()
-		bottom:setLeftRight(false, true, 0, 0)
-		bottom:setTopBottom(false, false, height + pipegap, 360)
+		local bottom = LUI.UIImage.new({
+			rightAnchor = true,
+			height = 640,
+			top = height + pipegap,
+		})
 		bottom:setImage(RegisterMaterial("flappybird/pipe-green"))
 		root:addElement(bottom)
 		table.insert(pipes, {
-			bottomElement = bottom,
-			topElement = top,
+			bottom = bottom,
+			top = top,
+			topextend = topextend,
 			x = -10,
 			y = height
 		})
 	end
 
 	local function deletepipe(pipe)
-		pipe.bottomElement:close()
-		pipe.topElement:close()
+		pipe.bottom:close()
+		pipe.top:close()
 		pipe = nil
 	end
 
@@ -216,7 +213,7 @@ function CoD.FlappyBirdContainer.new(HudRef, InstanceRef)
 		return false
 	end
 
-	local function update(HudObj, EventObj)
+	local function update()
 		if (not hitpipe) then
 			birdflapaddcount = birdflapaddcount + 1
 			if (birdflapaddcount == birdflaptiming) then
@@ -239,8 +236,8 @@ function CoD.FlappyBirdContainer.new(HudRef, InstanceRef)
 			for k, v in ipairs(pipes) do
 				if v.deleted == nil then
 					v.x = v.x - updatescale * pipespeed
-					v.bottomElement:setLeftRight(false, true, v.x, v.x + pipewidth)
-					v.topElement:setLeftRight(false, true, v.x, v.x + pipewidth)
+					v.bottom:setLeftRight(false, true, v.x, v.x + pipewidth)
+					v.top:setLeftRight(false, true, v.x, v.x + pipewidth)
 					if istouchingpipe(v) then
 						Engine.PlaySound("uin_flappybird_hit")
 						hitpipe = true
